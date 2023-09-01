@@ -32,7 +32,8 @@ data "tfe_organization" "tfc_org" {
 
 # Get the Terraform Cloud project
 data "tfe_project" "tfc_project" {
-  name = var.tfc_project_name
+  name         = var.tfc_project_name
+  organization = data.tfe_organization.tfc_org.name
 }
 
 # Random ID for the workload_identity_pool_id
@@ -50,7 +51,15 @@ resource "tfe_variable_set" "tfc_gcp_oidc_var_set" {
 }
 
 resource "tfe_project_variable_set" "tfc_gcp_oidc_var_set" {
-  project_id      = data.tfe_project.tfc_project.name
+  project_id      = data.tfe_project.tfc_project.id
+  variable_set_id = tfe_variable_set.tfc_gcp_oidc_var_set.id
+}
+
+resource "tfe_variable" "gcp_project_id" {
+  key             = "project_id"
+  value           = var.project_id
+  category        = "terraform"
+  description     = "The project id for the GCP project."
   variable_set_id = tfe_variable_set.tfc_gcp_oidc_var_set.id
 }
 
@@ -102,7 +111,7 @@ module "oidc" {
   }
   tfc_organization_name = data.tfe_organization.tfc_org.name
   tfc_project_name      = data.tfe_project.tfc_project.name
-  attribute_condition   = "assertion.sub.startsWith(\"organization:${data.tfe_organization.tfc_org.name}:project:${data.tfe_project.tfc_project.name}:workspace:*\")"
+  attribute_condition   = "assertion.sub.startsWith(\"organization:${data.tfe_organization.tfc_org.name}:project:${data.tfe_project.tfc_project.name}\")"
 }
 
 # Creates a service account that will be used for authenticating to GCP.
@@ -127,7 +136,7 @@ resource "google_project_iam_member" "tfc_project_member" {
 # for ex. storage access - see role_list variable
 resource "google_project_iam_member" "project" {
   project  = var.project_id
-  for_each = toset(var.gcp_service_list)
+  for_each = toset(var.gcp_roles_list)
   role     = each.value
   member   = "serviceAccount:${google_service_account.tfc_service_account.email}"
 }

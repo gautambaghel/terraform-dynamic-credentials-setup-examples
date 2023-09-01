@@ -20,7 +20,7 @@ variable "tfc_organization_name" {
 
 variable "tfc_project_name" {
   type        = string
-  default     = "GCP Testing"
+  default     = "GCP"
   description = "The project under which a workspace will be created"
 }
 
@@ -37,5 +37,13 @@ variable "gcp_service_list" {
     "cloudresourcemanager.googleapis.com",
     "sts.googleapis.com",
     "iamcredentials.googleapis.com"
+  ]
+}
+
+variable "gcp_roles_list" {
+  description = "Roles required for the Service Account"
+  type        = list(string)
+  default = [
+    "roles/storage.admin"
   ]
 }
