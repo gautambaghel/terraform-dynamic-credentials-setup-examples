@@ -20,17 +20,11 @@ variable "tfc_organization_name" {
 
 variable "tfc_project_name" {
   type        = string
-  default     = "Default Project"
+  default     = "GCP Testing"
   description = "The project under which a workspace will be created"
 }
 
-variable "tfc_workspace_name" {
-  type        = string
-  default     = "my-gcp-workspace"
-  description = "The name of the workspace that you'd like to create and connect to GCP"
-}
-
-variable "gcp_project_id" {
+variable "project_id" {
   type        = string
   description = "The ID for your GCP project"
 }

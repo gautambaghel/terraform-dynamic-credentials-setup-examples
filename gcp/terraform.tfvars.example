@@ -1,2 +1,2 @@
 tfc_organization_name = "my-organization"
-gcp_project_id = "my.project.id"
+project_id = "my.project.id"
