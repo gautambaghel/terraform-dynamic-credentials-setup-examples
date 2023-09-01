@@ -20,12 +20,6 @@ variable "tfc_organization_name" {
 
 variable "tfc_project_name" {
   type        = string
-  default     = "Default Project"
+  default     = "AWS"
   description = "The project under which a workspace will be created"
-}
-
-variable "tfc_workspace_name" {
-  type        = string
-  default     = "my-aws-workspace"
-  description = "The name of the workspace that you'd like to create and connect to AWS"
 }
